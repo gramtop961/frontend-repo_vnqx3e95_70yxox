@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // Simple equirectangular map with click-to-select and SVG path rendering
 const WIDTH = 900;
@@ -11,19 +11,19 @@ function projectLonLatToXY(lon, lat) {
   return { x, y };
 }
 
+const GYRES = [
+  { id: 'np', name: 'North Pacific Gyre', lon: -140, lat: 30 },
+  { id: 'sp', name: 'South Pacific Gyre', lon: -110, lat: -30 },
+  { id: 'na', name: 'North Atlantic Gyre', lon: -40, lat: 30 },
+  { id: 'sa', name: 'South Atlantic Gyre', lon: -15, lat: -30 },
+  { id: 'in', name: 'Indian Ocean Gyre', lon: 80, lat: -30 },
+];
+
 function pickGyreSink(lon, lat) {
   // Heuristic: route to nearest major subtropical gyre center
-  // Pacific (N/S), Atlantic (N/S), Indian
-  const gyres = [
-    { name: 'North Pacific Gyre', lon: -140, lat: 30 },
-    { name: 'South Pacific Gyre', lon: -110, lat: -30 },
-    { name: 'North Atlantic Gyre', lon: -40, lat: 30 },
-    { name: 'South Atlantic Gyre', lon: -15, lat: -30 },
-    { name: 'Indian Ocean Gyre', lon: 80, lat: -30 },
-  ];
-  let best = gyres[0];
+  let best = GYRES[0];
   let bestDist = Infinity;
-  for (const g of gyres) {
+  for (const g of GYRES) {
     const d = Math.hypot((g.lon - lon) * Math.cos((lat * Math.PI) / 180), g.lat - lat);
     if (d < bestDist) {
       best = g;
@@ -44,10 +44,14 @@ function curvePath(start, end) {
   return `M ${s.x},${s.y} Q ${ctrl.x},${ctrl.y} ${e.x},${e.y}`;
 }
 
-export default function WastePathPicker() {
+export default function WastePathPicker({ onSinkChange }) {
   const [point, setPoint] = useState({ lon: 0, lat: 10 });
   const sink = useMemo(() => pickGyreSink(point.lon, point.lat), [point]);
   const d = useMemo(() => curvePath(point, sink), [point, sink]);
+
+  useEffect(() => {
+    if (onSinkChange) onSinkChange(sink);
+  }, [sink, onSinkChange]);
 
   function handleClick(e) {
     const rect = e.currentTarget.getBoundingClientRect();
