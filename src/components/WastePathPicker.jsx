@@ -44,7 +44,7 @@ function curvePath(start, end) {
   return `M ${s.x},${s.y} Q ${ctrl.x},${ctrl.y} ${e.x},${e.y}`;
 }
 
-export default function WastePathPicker({ onSinkChange }) {
+export default function WastePathPicker({ onSinkChange, id }) {
   const [point, setPoint] = useState({ lon: 0, lat: 10 });
   const sink = useMemo(() => pickGyreSink(point.lon, point.lat), [point]);
   const d = useMemo(() => curvePath(point, sink), [point, sink]);
@@ -66,12 +66,12 @@ export default function WastePathPicker({ onSinkChange }) {
   const endXY = projectLonLatToXY(sink.lon, sink.lat);
 
   return (
-    <section className="relative w-full snap-start bg-white py-16 text-neutral-900 md:py-24">
+    <section id={id} className="relative w-full snap-start bg-white py-16 text-neutral-900 md:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mb-8 text-center md:mb-12">
-          <h2 className="text-3xl font-semibold md:text-5xl">Choose a Drop Point</h2>
+          <h2 className="text-3xl font-semibold md:text-5xl">Merged View: Currents Map</h2>
           <p className="mx-auto mt-3 max-w-2xl text-neutral-600">
-            Click on the map or adjust coordinates. We’ll estimate the current-driven path and where debris tends to accumulate.
+            We dissolved the globe into fragments and overlaid the current-driven paths on a flat map. Pick a drop point to see the likely sink region.
           </p>
         </div>
 

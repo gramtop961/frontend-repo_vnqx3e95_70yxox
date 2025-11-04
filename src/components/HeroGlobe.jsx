@@ -1,7 +1,7 @@
 import React from 'react';
 import Spline from '@splinetool/react-spline';
 
-export default function HeroGlobe() {
+export default function HeroGlobe({ onStart }) {
   return (
     <section className="relative h-screen w-full snap-start overflow-hidden bg-black text-white">
       <div className="absolute inset-0">
@@ -19,11 +19,18 @@ export default function HeroGlobe() {
           Follow the Journey of Ocean-Bound Waste
         </h1>
         <p className="mt-4 max-w-2xl text-base text-white/80 md:text-lg">
-          Spin the Earth. Scroll to watch it granulate into microplastics and reform as we trace where debris travels and the ecosystems it affects.
+          Spin the Earth. Then granulate and merge into a current map to trace where debris travels and the ecosystems it affects.
         </p>
-        <div className="mt-10 flex items-center gap-3 rounded-full bg-white/10 px-5 py-2 text-sm text-white/90 backdrop-blur">
-          <span>Scroll to explore</span>
-          <span className="inline-block h-2 w-2 animate-bounce rounded-full bg-red-400" />
+        <div className="mt-10 flex items-center gap-3">
+          <button
+            onClick={() => onStart && onStart()}
+            className="rounded-full bg-red-500 px-5 py-2 text-sm font-medium text-white shadow-lg shadow-red-500/30 transition hover:bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-300"
+          >
+            Granulate & Reveal Map
+          </button>
+          <div className="rounded-full bg-white/10 px-4 py-2 text-sm text-white/90 backdrop-blur">
+            or scroll to explore
+          </div>
         </div>
       </div>
     </section>
